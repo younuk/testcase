@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="testcaseCategory">
+
+
+	<!--  select :: 목록 -->
+	<select id="select" parameterType="kt.dsstestcase.vo.testcaseCategoryVO" resultType="kt.dsstestcase.vo.testcaseCategoryVO">
+		SELECT sn, cat_id, gid, ord, dept, pnm, nm 
+		FROM  testcase_category 
+		<if test=" gid != null and gid != '' ">
+			 AND gid = #{gid}
+		</if>
+		ORDER BY gid, ord, dept
+	</select>	
+	
+    <!--  select :: 목록 -->
+    <select id="selectUpperCategory" parameterType="kt.dsstestcase.vo.testcaseCategoryVO" resultType="kt.dsstestcase.vo.testcaseCategoryVO">
+        SELECT sn, pnm 
+        FROM  testcase_category 
+        <if test=" gid != null and gid != '' ">
+             AND gid = #{gid}
+        </if>
+        GROUP BY gid, pnm
+        ORDER BY gid
+    </select>
+    
+	<!--  selectByGid :: 목록 -->
+	<select id="selectByGid" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.testcaseCategoryVO">
+		SELECT sn, cat_id, gid, ord, dept, pnm, nm 
+		FROM  testcase_category
+		WHERE gid=#{gid} 
+		ORDER BY gid, ord, dept
+	</select>		
+
+	
+	<!--  selectOneBySn :: 목록 -->
+	<select id="selectOneBySn" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.testcaseCategoryVO">
+		SELECT sn, cat_id, gid, ord, dept, pnm, nm 
+		FROM  testcase_category 
+		WHERE sn=#{sn}
+	</select>
+	
+
+	<!--  insertTestcase -->
+	<insert id="insert" parameterType="kt.dsstestcase.vo.testcaseCategoryVO" useGeneratedKeys="true" keyProperty="sn">
+		INSERT INTO  testcase_category  (
+			cat_id,
+			gid, 
+			ord,
+			dept,
+			pnm,
+			nm
+        )VALUES(  
+			#{cat_id},
+			#{gid}, 
+			#{ord},
+			#{dept},
+			#{pnm},
+			#{nm}                 
+        )
+	</insert>
+	
+	
+	<!--  update :: 정보 수정  -->
+	<update id="update" parameterType="kt.dsstestcase.vo.testcaseCategoryVO">
+		UPDATE  testcase_category  SET
+			cat_id = #{cat_id},
+			gid  = #{gid}, 
+			ord  = #{ord},
+			dept = #{dept},
+			pnm  = #{pnm}
+			nm   = #{nm}
+		WHERE sn = #{sn}
+	</update>
+	
+	
+	<!--  delete :: 삭제  -->
+	<update id="delete" parameterType="java.util.Map">
+		DELETE FROM  testcase_category  				
+		WHERE sn=#{sn}
+	</update>
+	
+	
+</mapper>

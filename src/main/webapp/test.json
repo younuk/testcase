@@ -1,0 +1,14 @@
+{
+"total_ecash":100,
+"total_count":200,
+"list":[
+		{
+			"name": "MyName1",
+			"age": 20,
+			"job": "NoJob1"
+		}, {
+			"name": "MyName2",
+			"age": 30,
+			"job": "NoJob2"
+		}]
+}

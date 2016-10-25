@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="testcase">
+
+	<!--  selectOneBySn :: sn으로 정보 찾아주기 -->
+	<select id="selectOneBySn" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.testcaseVO">
+		SELECT * 
+		FROM  testcase  WHERE sn=#{sn}
+	</select>
+	
+
+	<!--  select :: 목록 -->
+	<select id="select" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.testcaseVO">
+		SELECT * 
+		FROM  testcase 
+		WHERE exam IS NOT NULL AND exam != '' 
+		ORDER BY service_domain, ans_actType
+	</select>	
+	
+	
+	<!--  actTypeGroupList :: 목록 -->
+	<select id="selectActTypeGroupList" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.actTypeVO">
+		SELECT act_type_str, ans_actType as actType
+		FROM testcase 
+		GROUP BY ans_actType
+	</select>	
+
+	<!--  selectView :: 목록 -->
+	<select id="selectView" parameterType="kt.dsstestcase.vo.testcaseVO" resultType="kt.dsstestcase.vo.testcaseVO">
+			SELECT  t.sn,
+			        t.gid,
+					t.cat_id,
+					t.service_domain,
+					t.in_domain,
+					t.descr,
+					t.exam,
+					t.service_id_str,
+					t.ans_sysAct,
+					t.ans_actType,
+					t.ans_srchword,
+					t.ans_srchopt,
+					t.ans_srchqry,
+					t.ans_sword,
+					t.p_status,
+					t.p_event,
+					t.p_uinfo,
+					t.p_context,
+			        c.nm as cat_nm,
+			        d.domain_name as service_domain_name
+			FROM testcase t,
+			     testcase_service_domain d,
+			     testcase_category c
+			WHERE t.service_domain = d.service_domain 
+			  AND t.cat_id = c.cat_id		
+			  AND t.exam IS NOT NULL 
+			  AND t.exam != '' 	
+			  <if test=" exam != null and exam != '' ">
+			  	 	AND t.exam LIKE CONCAT('%', #{exam} , '%')
+			  </if>
+			  <if test=" gid != null and gid != '' ">
+			  		AND t.gid = #{gid}
+			  </if>
+			  <if test=" cat_id != null and cat_id != '' ">
+			  		AND t.cat_id = #{cat_id}
+			  </if>			  
+			  
+			ORDER BY t.cat_id, t.service_domain, t.exam
+	</select>	
+
+
+	<!--  insertTestcase -->
+	<insert id="insert" parameterType="kt.dsstestcase.vo.testcaseVO" useGeneratedKeys="true" keyProperty="sn">
+		INSERT INTO  testcase  (
+			gid,
+			cat_id,
+			service_domain,
+			in_domain,
+			act_type_str,
+			descr,
+			exam,
+			service_id_tmpl,
+			service_id_ptrn,
+			service_id_str,
+			chk_method,
+			ans_sysAct,
+			ans_actType,
+			ans_srchword,
+			ans_srchopt,
+			ans_srchqry,
+			ans_sword,
+			g_domain,
+			service_id_example,
+			service_rmk,
+			p_status,
+			p_event,
+			p_uinfo,
+			p_context
+        )VALUES(     
+ 			#{gid},
+			#{cat_id},
+			#{service_domain},
+			#{in_domain},
+			#{act_type_str},
+			#{descr},
+			#{exam},
+			#{service_id_tmpl},
+			#{service_id_ptrn},
+			#{service_id_str},
+			#{chk_method},
+			#{ans_sysAct},
+			#{ans_actType},
+			#{ans_srchword},
+			#{ans_srchopt},
+			#{ans_srchqry},
+			#{ans_sword},
+			#{g_domain},
+			#{service_id_example},
+			#{service_rmk},
+			#{p_status},
+			#{p_event},
+			#{p_uinfo},
+			#{p_context}        
+        )
+	</insert>
+	
+	
+	<!--  update :: 정보 수정  -->
+	<update id="update" parameterType="kt.dsstestcase.vo.testcaseVO">
+		UPDATE  testcase  SET
+			gid = #{gid},
+			cat_id = #{cat_id},
+			service_domain = #{service_domain},
+			in_domain = #{in_domain},
+			act_type_str = #{act_type_str},
+			descr = #{descr},
+			exam = #{exam},
+			service_id_tmpl = #{service_id_tmpl},
+			service_id_ptrn = #{service_id_ptrn},
+			service_id_str = #{service_id_str},
+			chk_method = #{chk_method},
+			ans_sysAct = #{ans_sysAct},
+			ans_actType = #{ans_actType},
+			ans_srchword = #{ans_srchword},
+			ans_srchopt = #{ans_srchopt},
+			ans_srchqry = #{ans_srchqry},
+			ans_sword = #{ans_sword},
+			g_domain = #{g_domain},
+			service_id_example = #{service_id_example},
+			service_rmk = #{service_rmk},
+			p_status = #{p_status},
+			p_event = #{p_event},
+			p_uinfo = #{p_uinfo},
+			p_context = #{p_context}
+		WHERE sn=#{sn}
+	</update>
+	
+	
+	<!--  updateField :: 정보 수정  -->
+	<update id="updateField" parameterType="java.util.Map">
+		UPDATE  testcase  SET
+			${field}=#{value}
+		WHERE sn=#{sn}
+	</update>	
+	
+	
+	<!--  delete :: 삭제  -->
+	<update id="delete" parameterType="java.util.Map">
+		DELETE FROM  testcase  				
+		WHERE sn=#{sn}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="log">
+
+	<select id="selectOneByUuidSn" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.logVO">
+		SELECT
+			uuid, sn, login_id, req, xml, rgsde
+		FROM 
+			testcase_log
+		WHERE 
+			uuid=#{uuid} AND sn=#{sn}
+		ORDER BY sn LIMIT 1
+	</select>	
+
+	<select id="selectByUuid" parameterType="java.util.Map" resultType="kt.dsstestcase.vo.logVO">
+		SELECT
+			uuid, sn, login_id, req, xml, rgsde
+		FROM 
+			testcase_log
+		WHERE 
+			uuid=#{uuid}
+	</select>		
+
+	<insert id="insert" parameterType="kt.dsstestcase.vo.logVO">
+		<![CDATA[
+			INSERT INTO  testcase_log  (
+				uuid,
+				sn,
+				login_id,
+				req,
+				xml,
+				rgsde
+	        )VALUES(  
+				#{uuid},
+				#{sn},
+				#{login_id},
+				#{req},
+				#{xml},
+				now()			    
+	        )
+        ]]> 
+	</insert>
+	
+</mapper>

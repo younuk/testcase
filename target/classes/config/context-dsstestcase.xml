@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <beans xmlns="http://www.springframework.org/schema/beans"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:context="http://www.springframework.org/schema/context"
+            xmlns:mvc="http://www.springframework.org/schema/mvc"
+            xmlns:lang="http://www.springframework.org/schema/lang"
+            xmlns:p="http://www.springframework.org/schema/p"
+            xmlns:aop="http://www.springframework.org/schema/aop"
+            xmlns:tx="http://www.springframework.org/schema/tx"
+            xmlns:util="http://www.springframework.org/schema/util"
+            xmlns:task="http://www.springframework.org/schema/task"      
+            
+            xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">               
+               
+            <context:component-scan base-package="kt.dsstestcase" use-default-filters="false">
+                <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+                <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+                <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+            </context:component-scan>
+                                                                            
+            <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+                <property name="alwaysUseFullPath" value="true" />
+            </bean>
+            
+			<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+             <property name="alwaysUseFullPath" value="true" />		
+			</bean>
+          
+            <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                <property name="prefix" value="/"/>
+                <property name="suffix" value=".jsp"/>
+            </bean>                                          
+                           
+
+            <!--  ============================================================================= -->                              
+		    <!--   DataSource Definition : With log4sql.jar                                     -->
+            <!--  ============================================================================= -->		
+			<!-- property name="driverClassName" value="core.log.jdbc.driver.MysqlDriver"/ -->            
+			<!-- property name="driverClassName" value="com.mysql.jdbc.Driver"/ -->
+
+            <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">                            
+                <property name="driverClassName" value="core.log.jdbc.driver.MysqlDriver"/>
+                <property name="url" value="jdbc:mysql://218.38.52.177/dss?useUnicode=true&amp;characterEncoding=utf8"/> 
+                <property name="username" value="dss1234"/>
+                <property name="password" value="dss1234"/>
+            </bean>
+<!-- 
+            <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">            
+                <property name="driverClassName" value="com.mysql.jdbc.Driver"/>  
+                <property name="url" value="jdbc:mysql://218.38.52.177/dss?useUnicode=true&amp;characterEncoding=utf8"/> 
+                <property name="username" value="dss1234"/>
+                <property name="password" value="dss1234"/>
+            </bean>
+ -->
+			<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+         		<property name="dataSource" ref="dataSource" />
+				<property name="mapperLocations" value="classpath:/kt/dsstestcase/sql/*.xml" />
+            </bean>
+            <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+                <constructor-arg ref="sqlSessionFactory" />
+            </bean>		
+ 			<bean id="transactionManager"
+        		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        		<property name="dataSource" ref="dataSource" />
+    		</bean>                
+
+			 <!--  ============================================================================= -->  		   
+  		    <!--  Session Definition                                                            -->
+            <!--  ============================================================================= -->  		    
+            <bean id="authVO" class="kt.dsstestcase.vo.authVO"/>
+        </beans>
