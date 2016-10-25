@@ -172,6 +172,7 @@
                  -->
           </div>
        </div>
+       
 
        <!-- deviceInfo 입력 -->
        <div class="dinfoBox">
