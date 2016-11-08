@@ -202,7 +202,6 @@ ang.controller('casetestCtrl', function($scope, $http, $ionicPopup, $ionicLoadin
 						$scope.testCaseList = $scope.testCaseList.concat($scope.testCaseListAll[p]);
 					}
 				}
-
 			}
 		}
 
