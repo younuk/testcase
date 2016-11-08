@@ -3181,34 +3181,11 @@ legend {
  * 5. Make sure webkit font smoothing is being inherited
  * 6. Remove default gradient in Android Firefox / FirefoxOS
  */
-button,
-input,
-select,
-textarea {
-  margin: 0;
-  /* 3 */
-  font-size: 100%;
-  /* 2 */
-  font-family: inherit;
-  /* 1 */
-  outline-offset: 0;
-  /* 4 */
-  outline-style: none;
-  /* 4 */
-  outline-width: 0;
-  /* 4 */
-  -webkit-font-smoothing: inherit;
-  /* 5 */
-  background-image: none;
-  /* 6 */ }
 
 /**
  * Address Firefox 4+ setting `line-height` on `input` using `importnt` in
  * the UA stylesheet.
  */
-button,
-input {
-  line-height: normal; }
 
 /**
  * Address inconsistent `text-transform` inheritance for `button` and `select`.
@@ -3297,14 +3274,15 @@ table {
 /**
  * Scaffolding
  * --------------------------------------------------
- */
+ 
+ 
 *,
 *:before,
 *:after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
-
+*/
 html {
   overflow: hidden;
   -ms-touch-action: pan-y;
@@ -3356,7 +3334,7 @@ body.grade-c {
   left: 0;
   overflow: hidden;
   margin-top: -1px;
-  padding-top: 44px;
+  /* padding-top: 44px; */
   margin-bottom: -1px;
   width: auto;
   height: auto; }
@@ -3487,7 +3465,8 @@ ion-infinite-scroll {
 
 /* If you change these, change platform.scss as well */
 .has-header {
-  top: 0px; }
+  top: 95px; }
+  
 
 .no-header {
   top: 0; }
@@ -6384,7 +6363,7 @@ button.item.item-button-right {
     vertical-align: middle; }
 
 .item-body {
-  overflow: auto;
+  overflow: hidden;
   padding: 16px;
   text-overflow: inherit;
   white-space: normal; }

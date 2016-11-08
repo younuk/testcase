@@ -5,43 +5,55 @@ xmlns:web="http://java.sun.com/xml/ns/javaee"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
 id="WebApp_ID" version="2.5">
 
-  <display-name>testcase</display-name>
-  <welcome-file-list>
+<display-name>testcase</display-name>
+<welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.html</welcome-file>
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.html</welcome-file>
-  </welcome-file-list>
-  <session-config>
-    <session-timeout>720</session-timeout>
-  </session-config>
-  <servlet>
+</welcome-file-list>
+<session-config>
+    <session-timeout>10</session-timeout>
+</session-config>
+<servlet>
     <servlet-name>testcase</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/classes/config/context-dsstestcase.xml</param-value>
+      <param-value>/WEB-INF/classes/config/context-dsstestcase.xml
+                    /WEB-INF/classes/config/mybatis-context.xml
+      </param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
-  </servlet>
-  <filter>
+</servlet>
+<filter>
     <filter-name>encodingFilter</filter-name>
-    <filter-class>
-	            org.springframework.web.filter.CharacterEncodingFilter
-	    </filter-class>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
     </init-param>
-  </filter>
-  <filter-mapping>
+</filter>
+<filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <servlet-mapping>
+</filter-mapping>
+<servlet-mapping>
     <servlet-name>testcase</servlet-name>
     <url-pattern>*.do</url-pattern>
-  </servlet-mapping>
+</servlet-mapping>
+  
+<listener>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+</listener>
+<context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>/WEB-INF/classes/config/log4j.xml</param-value>
+</context-param>
 </web-app>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kt.dsstestcase.dao.testcaseGroupDao">
+
+    <select id="select" parameterType="java.lang.String" resultType="testcaseGroupVO">
+        SELECT G.gid
+             , G.group_nm
+             , G.login_id
+             , A.login_nm
+             , G.rgsde
+             , G.uinfo_1
+             , G.uinfo_2
+             , G.uinfo_3
+             , G.uinfo_4
+             , G.uinfo_5
+             , G.uinfo_6
+             , G.fav_genre
+             , G.fav_point
+             , G.status
+             , G.event
+             , G.uinfo
+             , G.context
+             , G.STB_VER
+             , G.stbVersion
+             , G.product_id
+             , G.appID
+             , G.devService_id
+             , IFNULL(I.cnt, 0) AS cnt
+          FROM testcase_group G
+         INNER JOIN testcase_auth A
+            ON G.login_id = A.login_id
+    LEFT OUTER JOIN (SELECT gid, COUNT(*) cnt
+                       FROM testcase_group_item
+                      GROUP BY gid) I
+            ON G.gid = I.gid   
+
+        <if test=" value != null and value != '' ">
+            WHERE G.group_nm LIKE  CONCAT('%', #{value} , '%')
+        </if>
+        ORDER BY G.gid
+    </select>
+
+    <select id="selectOneByGid" parameterType="java.util.Map" resultType="testcaseGroupVO">
+        SELECT G.gid
+             , G.group_nm
+             , G.login_id
+             , A.login_nm
+             , G.rgsde
+             , G.uinfo_1
+             , G.uinfo_2
+             , G.uinfo_3
+             , G.uinfo_4
+             , G.uinfo_5
+             , G.uinfo_6
+             , G.fav_genre
+             , G.fav_point
+             , G.status
+             , G.event
+             , G.uinfo
+             , G.context
+             , G.STB_VER
+             , G.stbVersion
+             , G.product_id
+             , G.appID
+             , G.devService_id
+             , (SELECT count(*) 
+                  FROM testcase 
+                 WHERE gid=G.gid) as cnt
+          FROM testcase_group G
+             , testcase_auth A
+         WHERE G.login_id = A.login_id
+           AND G.gid    = #{gid}
+    </select>
+    
+    <select id="selectTestcasebyGroup" parameterType="String" resultType="java.util.Map">
+        SELECT t.* 
+             , tc.pnm
+             , tc.nm
+             , '' regist_id
+             , '' regist_dt
+          FROM testcase t
+         INNER JOIN testcase_group_item i
+            ON t.sn = i.testcase_sn
+           AND i.gid = #{gid}
+    LEFT OUTER JOIN testcase_category tc
+                 ON t.cat_id = tc.cat_id
+        ORDER BY t.sn
+    </select>
+    
+
+    <!--  insertTestcase -->
+    <insert id="insert" parameterType="testcaseGroupVO">
+        <selectKey resultType="int" keyProperty="gid" order="BEFORE">
+            SELECT IFNULL(MAX(gid),0)+1 as gid
+              FROM testcase_group
+        </selectKey>
+        
+        INSERT INTO testcase_group  
+        ( gid
+        , group_nm
+        , login_id
+        , rgsde
+        , uinfo_1
+        , uinfo_2
+        , uinfo_3
+        , uinfo_4
+        , uinfo_5
+        , uinfo_6
+        , fav_genre
+        , fav_point
+        , status
+        , event
+        , uinfo
+        , context
+        , STB_VER
+        , stbVersion
+        , product_id
+        , appID
+        , devService_id
+        )VALUES
+        ( #{gid}
+        , #{group_nm}
+        , #{login_id}
+        , now()
+        , #{uinfo_1}
+        , #{uinfo_2}
+        , #{uinfo_3}
+        , #{uinfo_4}
+        , #{uinfo_5}
+        , #{uinfo_6}
+        , #{fav_genre}
+        , #{fav_point}
+        , #{status}
+        , #{event}
+        , #{uinfo}
+        , #{context}
+        , #{STB_VER}
+        , #{stbVersion}
+        , #{product_id}
+        , #{appID}
+        , #{devService_id}
+        )
+    </insert>
+
+    <!--  update :: 정보 수정  -->
+    <update id="update" parameterType="testcaseGroupVO">
+        UPDATE testcase_group  
+           SET group_nm     = #{group_nm}
+             , uinfo_1       = #{uinfo_1}
+             , uinfo_2       = #{uinfo_2}
+             , uinfo_3       = #{uinfo_3}
+             , uinfo_4       = #{uinfo_4}
+             , uinfo_5       = #{uinfo_5}
+             , uinfo_6       = #{uinfo_6}
+             , fav_genre     = #{fav_genre}
+             , fav_point     = #{fav_point}
+             , status        = #{status}
+             , event         = #{event}
+             , uinfo         = #{uinfo}
+             , context       = #{context}
+             , STB_VER       = #{STB_VER}
+             , stbVersion    = #{stbVersion}
+             , product_id    = #{product_id}
+             , appID         = #{appID}
+             , devService_id = #{devService_id}
+        WHERE gid            = #{gid}
+    </update>
+
+    <!--  delete :: 삭제  -->
+    <update id="delete" parameterType="java.lang.String">
+        DELETE 
+          FROM testcase_group
+         WHERE gid = #{gid}
+    </update>
+    
+    <!--  delete group-item mapping -->
+    <update id="deleteGroupItem" parameterType="java.lang.Integer">
+        DELETE
+          FROM testcase_group_item
+         WHERE gid = #{gid}
+    </update>
+        
+    <!--  insert group-item mapping -->
+    <insert id="insertGroupItem" parameterType="java.util.Map">
+        INSERT INTO testcase_group_item
+        ( gid
+        , testcase_sn
+        )VALUES
+        <foreach item="item" collection="list" separator=",">
+          ( #{item.gid}
+          , #{item.testcase_sn})
+        </foreach>
+    </insert>    
+    
+    
+    <!--  update :: 정보 수정 
+    <update id="update1" parameterType="java.lang.String">
+        UPDATE testcase
+           SET gid  = #{gid}
+         WHERE sn   in (SELECT testcase_sn from testcase_group_item WHERE gid  = #{gid})
+    </update>
+    
+    <update id="update2" parameterType="java.lang.String">
+        UPDATE testcase
+           SET gid  = '0'
+         WHERE gid  = #{gid}
+           AND sn   not in (SELECT testcase_sn from testcase_group_item WHERE gid  = #{gid})
+    </update>
+     -->
+</mapper>

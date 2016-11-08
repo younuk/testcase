@@ -9,6 +9,7 @@ var ang = angular.module('testcase', ['ngGrid','ionic'])
 	  });
 	};
 })
+
 .directive('myEnter', function () {
 	return function (scope, element, attrs) {
 		element.bind("keydown keypress", function (event) {

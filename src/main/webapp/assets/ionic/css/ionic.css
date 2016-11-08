@@ -2225,7 +2225,7 @@ body.grade-b, body.grade-c {
   right: 0;
   bottom: 0;
   left: 0;
-  overflow: hidden;
+  overflow: auto;
   margin-top: -1px;
   padding-top: 1px;
   width: auto;
@@ -2444,7 +2444,8 @@ ion-infinite-scroll {
 
 /* If you change these, change platform.scss as well */
 .has-header {
-  top: 44px; }
+  top: 44px; 
+}
 
 .no-header {
   top: 0; }

@@ -2,32 +2,29 @@
         response.setHeader("cache-control","no-cache");
         response.setHeader("expires","0");
         response.setHeader("pragma","no-cache");
-%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
-%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
-%><%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr">
 <head>
-    <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=1024"/>
+    
     <title>kt 지능형감성대화서버 Service Test</title>
-    <link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="assets/lib/ionic/css/ionic.css" type="text/css" />
-    <link rel="stylesheet" href="assets/ionic/material-design/ionic.material.min.css" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/icons/ionicons.min.css" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="js/ng-grid.css" data-semver="2.0.11" data-require="ng-grid@*" />
-    <link rel="stylesheet" href="css/style_customtest_manage.css" type="text/css"/>
-
-    <script>
-        var _LOGIN_ID = "${authVO.login_id}";
-        var _gid  = "${catVO.gid}";
-    </script>
-
+    
+    <link rel="stylesheet" href="assets/lib/ionic/css/ionic.css" type="text/css" />    
+    <style>
+        #leftCatetorySel{
+            float:left;
+            width:200px;
+        }
+        #leftCatetorySel td{
+            padding:5px;   
+            cursor: pointer;
+        }
+    </style>
+    
     <script type="text/javascript" src="assets/js/jQuery.js"></script>
-    <script type="text/javascript" src="assets/js/less.js"></script>
     <script type="text/javascript" src="assets/lib/ionic/js/ionic.bundle.js"></script>
-    <script type="text/javascript" src="assets/ionic/material-design/ionic.material.min.js"></script>
     <script type="text/javascript" src="js/ng-grid.min.js" data-semver="2.0.11" data-require="ng-grid@*"></script>
     <script src="js/json2.js"></script>
     <script src="js/xml2json2.js"></script>
@@ -36,215 +33,177 @@
     <script src="js/customtest_manage.js"></script>
 </head>
 
-<body data-page="home" id="customtestManage" ng-app="testcase" ng-controller="customtestManageCtrl">
+<body data-page="home" id="customtestManage" ng-app="testcase" ng-controller="customtestManageCtrl" style="overflow:auto;">
 
-<ion-header-bar align-title="left" class="bar-positive">
-  <img src="images/kt_logo.jpg" style="width:60px; height:44px"/>
-  <h1 class="title">kt 지능형감성대화서버 Service Test</h1>
-</ion-header-bar>
-<div class="bar bar-subheader">
-     <div class="mainTitleBox">
-        <div class="mainTitleTab" ng-click="goPage('casetest.do')">Case Test</div>
-        <div class="mainTitleTab"    ng-click="goPage('singletest.do')">Single Test</div>
-        <div class="mainTitleTabSel"    ng-click="goPage('customtest.do')">Custom Test</div>
-        &nbsp;&nbsp;&nbsp;
-        <input type=button value=" CASETEST MANAGE "
-                ng-click="goPage('casetestManage.do')" style="height:33px; line-height:30px; font-size:12px"/>
+<jsp:include page="header.jsp" flush="false"/>
+<script>
+    document.getElementById("liCst").className ="on";
+    var _gid = "${gid}";
+</script>
+
+<!-- LNB -->
+<!-- /LNB -->
+
+<!-- Contents -->
+<div id="bodyWrapper" style="margin-left:20px;">
+    <!-- search area -->
+    <div style="height:35px;">케이스그룹명 : <input type="text" name="group_nm" id="group_nm" ng-model="header.group_nm" size="40"/>
+        &nbsp;&nbsp;&nbsp;<button class="btn btn-primary btn-small" ng-click="btnSaveClick()">SAVE</button>
     </div>
+    <div class="wiget-gbx" style="float:left;width:530px;">
+        <h3>user info</h3>
+        <div class="inner">
+            <table class="wiget-table tbl_col">
+                <colgroup>
+                    <col width="80"/>
+                    <col width="*"/>
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>User ID</th>
+                        <td><input type="text" name="id" id="id" size="10" value="${authVO.login_id}" readonly/></td>
+                    </tr>
+                    <tr height="39">
+                        <th>가입서비스</th>
+                        <td><input type="checkbox" name="chk_uinfo1" id="chk_uinfo1" ng-model="serviceDomainList[1].checked"/>&nbsp;비서
+                                    &nbsp;<input type="checkbox" name="chk_uinfo2" id="chk_uinfo2" ng-model="serviceDomainList[2].checked"/>OTV
+                                    &nbsp;<input type="checkbox" name="chk_uinfo3" id="chk_uinfo3" ng-model="serviceDomainList[3].checked"/>전화
+                                    &nbsp;<input type="checkbox" name="chk_uinfo4" id="chk_uinfo4" ng-model="serviceDomainList[4].checked"/>홈캠
+                                    &nbsp;<input type="checkbox" name="chk_uinfo5" id="chk_uinfo5" ng-model="serviceDomainList[5].checked"/>홈IOT
+                                    &nbsp;<input type="checkbox" name="chk_uinfo6" id="chk_uinfo6" ng-model="serviceDomainList[6].checked"/>지니뮤직</td>
+                    </tr>
+                    <tr>
+                        <th>선호장르</th>
+                        <td><input type="text" name="edtFavGenre" id="edtFavGenre" size="45"/>
+                            <button class="btn btn-small" ng-click="showFavGenrePOPClick()">+</button>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                       <th>추천선호도</th>
+                       <td><select name="selFavPoint" id="selFavPoint">
+                                    <option value=""></option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                  </select></td>
+                    </tr>
+                    <tr>
+                       <th>Status</th>
+                       <td><input type="text" name="edtStatus" id="edtStatus" size="45"/>
+                           <button class="btn btn-small" ng-click="showStatusPOPClick()">+</button>
+                       </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="wiget-gbx" style="margin-left:538px;min-width: 530px;">
+        <h3>device info</h3>
+        <div class="inner">
+            <table class="wiget-table tbl_col">
+                <colgroup>
+                    <col width="100"/>
+                    <col width="*"/>
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>세탑단말버전(STB Ver)</th>
+                        <td><select name="STB_VER" id="STB_VER">
+                                <option value="0.4">0.4</option>
+                                <option value="0.6">0.6</option>
+                              </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>클라이언트 단말버전(stbVersion)</th>
+                        <td><select name="stbVersion" id="stbVersion">
+                                <option value="0.6">0.6</option>
+                                <option value="0.4">0.4</option>
+                              </select></td>
+                    </tr>
+                    <tr>
+                       <th>devServiceID</th>
+                       <td>&nbsp;<input type="text" name="devService_id" id="devService_id" /></td>
+                    </tr>
+                    <tr>
+                       <th>Product ID</th>
+                       <td>&nbsp;<input type="text" name="product_id" id="product_id" /></td>
+                    </tr>
+                    <tr>
+                       <th>appID</th>
+                       <td>&nbsp;<input type="text" name="appID" id="appID" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- search area -->
+    <div style="clear:both"></div>
+    
+    <!--  category dropdown -->
+    <div id="leftCatetorySel">
+        <div class="wiget-gbx">
+	        <table class="tbl_row">
+	            <tbody>
+	                <tr>
+	                   <td onclick="selSubCatList('')">전체</td>
+	                </tr>
+	                <tr ng-repeat="im in upperCategoryList" ng-click="selSubCatList('{{im.gid}}')">
+	                   <td>{{im.pnm}}</td>
+	                </tr>
+	            </tbody>
+	        </table>
+        </div>
+        <div class="wiget-gbx" style="height:250px;overflow:auto;">
+	        <table class="tbl_row">
+	           <tbody>
+	               <tr ng-repeat="im in categoryList" ng-click="selTestCaseList('{{im.cat_id}}')">
+	                  <td>{{im.nm}}({{im.tc_cnt}})</td>
+	               </tr>
+	           </tbody>
+	       </table>
+       </div>
+    </div>
+    <!--  category dropdown -->
+    
+    <!-- grid area -->
+    <div class="wiget-gbx" style="margin-left:220px;height:600px;overflow:auto;">
+        <div class="inner"  >
+            <table class="wiget-table tbl_row">
+                <thead>
+                    <tr>
+                      <th width="40"></th>
+                      <th width="50">sid</th>
+                      <th width="100">구분</th>
+                      <th width="100">서비스</th>
+                      <th>발화</th>
+                      <th width="100">최초등록자</th>
+                      <th width="100">등록일</th>
+                      <th width="50">actType</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="im in testcaseGroupList">
+                       <td><input type="checkbox" name="chk" ng-model="im.chk"/></td>
+                       <td>{{im.sn}}</td>
+                       <td>{{im.pnm}}</td>
+                       <td>{{im.nm}}</td>
+                       <td>{{im.exam}}</td>
+                       <td>{{im.regist_id}}</td>
+                       <td>{{im.regist_dt}}</td>
+                       <td>{{im.ans_actType}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- grid area -->
 </div>
+<!-- Contents -->
 
- <ion-content  has-header="true" overflow-scroll="true" >
-
-     <!-- main input area -->
-     <div class="infoOutBox">
-
-          <table border=1>
-           <tr>
-            <td>
-                <span style='font-weight:bold'>User ID :</span> <input type="text" name="id" id="id" size=40 readonly/>
-            </td>
-            <td>
-                &nbsp;&nbsp;<span style='font-weight:bold'>케이스그룹명 :</span> <input type="text" name="group_nm" id="group_nm"  value="${catVO.group_nm}"  size=40 readonly/>
-            </td>
-            <td>
-                &nbsp;<input type="button" value="SAVE" class="btnSave" ng-click="Save()"/>
-            </td>
-           </tr>
-          </table>
-
-       <div class="uinfoBox1">
-
-          <!-- 가입서비스, 선호장르 입력 -->
-          <div class="uinfoBox">
-            <table>
-               <tr>
-                   <td class="fontBold" width="90px">가입서비스</td>
-                   <td>&nbsp;<input type=checkbox name="chk_uinfo1" id="chk_uinfo1" class="chkBox" ng-model="serviceDomainList[1].checked">&nbsp;비서
-                        <input type=checkbox name="chk_uinfo2" id="chk_uinfo2" class="chkBox" ng-model="serviceDomainList[2].checked">&nbsp;OTV
-                        <input type=checkbox name="chk_uinfo3" id="chk_uinfo3" class="chkBox" ng-model="serviceDomainList[3].checked">&nbsp;전화
-                        <input type=checkbox name="chk_uinfo4" id="chk_uinfo4" class="chkBox" ng-model="serviceDomainList[4].checked">&nbsp;홈캠
-                        <input type=checkbox name="chk_uinfo5" id="chk_uinfo5" class="chkBox" ng-model="serviceDomainList[5].checked">&nbsp;홈IOT
-                        <input type=checkbox name="chk_uinfo6" id="chk_uinfo6" class="chkBox" ng-model="serviceDomainList[6].checked">&nbsp;지니뮤직
-                    </td>
-               </tr>
-               <tr>
-                   <td class="fontBold">선호장르</td>
-                   <td>&nbsp;<input type="text" name="edtFavGenre" id="edtFavGenre" size=40/>
-                            <input type=button name="edt" id="btnAddGenre" value="+"  ng-click="showFavGenrePOPClick()"/>
-                    </td>
-               </tr>
-               <tr>
-                   <td class="fontBold">추천선호도</td>
-                   <td>&nbsp;<select name="selFavPoint" id="selFavPoint"  class="select80">
-			                    <option value=""></option>
-			                    <option value="1">1</option>
-			                    <option value="2">2</option>
-			                    <option value="3">3</option>
-			                    <option value="4">4</option>
-			                    <option value="5">5</option>
-			                    <option value="6">6</option>
-			                    <option value="7">7</option>
-			                    <option value="8">8</option>
-			                    <option value="9">9</option>
-			                    <option value="10">10</option>
-			                    <option value="11">11</option>
-			                    <option value="12">12</option>
-			                  </select>
-                  </td>
-               </tr>
-               <tr><td colspan=2>&nbsp;</td></tr>
-               <tr><td colspan=2>&nbsp;</td></tr>
-            </table>
-                  <!--  
-             <div class="paddingTd">가입서비스</div>
-             <div class="uinfoChkBox">
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo1" id="chk_uinfo1" class="chkBox" ng-model="serviceDomainList[1].checked">&nbsp;비서
-                </div>
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo2" id="chk_uinfo2" class="chkBox" ng-model="serviceDomainList[2].checked">&nbsp;OTV
-                </div>
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo3" id="chk_uinfo3" class="chkBox" ng-model="serviceDomainList[3].checked">&nbsp;전화
-                </div>
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo4" id="chk_uinfo4" class="chkBox" ng-model="serviceDomainList[4].checked">&nbsp;홈캠
-                </div>
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo5" id="chk_uinfo5" class="chkBox" ng-model="serviceDomainList[5].checked">&nbsp;홈IOT
-                </div>
-                <div class="floatLeft">
-                  <input type=checkbox name="chk_uinfo6" id="chk_uinfo6" class="chkBox" ng-model="serviceDomainList[6].checked">&nbsp;지니뮤직
-                </div>
-             </div>
-
-             <div class="paddingTd">선호장르</div>
-             <div class="uinfoGenre">
-                <div class="floatLeft">
-                  <input type="text" name="edtFavGenre" id="edtFavGenre" size=40/>
-                </div>
-                <div class="floatLeft">
-                  <input type=button name="edt" id="btnAddGenre" value="+"  ng-click="showFavGenrePOPClick()"/>
-                </div>
-                <div class="floatLeft">
-                  추천선호도
-                </div>
-                <div class="floatLeft">
-                  <select name="selFavPoint" id="selFavPoint"  class="select80">
-                    <option value=""></option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                  </select>
-                </div>
-             </div>
-              -->
-          </div>
-       </div>
-
-       <!-- deviceInfo 입력 -->
-       <div class="dinfoBox">
-            <table>
-               <tr>
-                   <td class="fontBold">세탑단말버전(STB Ver)</td>
-                   <td>&nbsp;<select name="STB_VER" id="STB_VER" class="select80">
-			                    <option value="0.4">0.4</option>
-			                    <option value="0.6">0.6</option>
-			                  </select>
-                   </td>
-               </tr>
-               <tr>
-                   <td class="fontBold">클라이언트 단말버전(stbVersion)</td>
-                   <td>&nbsp;<select name="stbVersion" id="stbVersion" class="select80">
-			                    <option value="0.6">0.6</option>
-			                    <option value="0.4">0.4</option>
-			                  </select>
-                   </td>
-               </tr>
-               <tr>
-                   <td class="fontBold">devServiceID</td>
-                   <td>&nbsp;<input type="text" name="devService_id" id="devService_id" /></td>
-               </tr>
-               <tr>
-                   <td class="fontBold">Product ID</td>
-                   <td>&nbsp;<input type="text" name="product_id" id="product_id" /></td>
-               </tr>
-               <tr>
-                   <td class="fontBold">appID</td>
-                   <td>&nbsp;<input type="text" name="appID" id="appID" /></td>
-               </tr>
-            </table>
-            
-       </div>
-
-       <!--  Category DropDown -->
-       <div class="leftCatBox" style="top:250px;">
-            <c:forEach var="item" items="${upperCatList}" varStatus="status">
-               <div sn="${item.sn}">${item.pnm}</div>
-            </c:forEach>
-            
-          <%-- <select name="cat" id="cat" style="width:150px; height:200px">
-            <c:forEach var="item" items="${catList}" varStatus="status">
-               <option value="${item.sn}">${item.pnm}</option>
-            </c:forEach>
-         </select> --%>
-       </div>
-       
-       <div class="leftCatBox" style="top:440px;">
-            <c:forEach var="item" items="${catList}" varStatus="status">
-               <div sn="${item.sn}">${item.nm}</div>
-            </c:forEach>
-       </div>
-
-       <!-- status -->
-       <!--
-       <div>
-         <div class="floatLeftBold">Status</div>
-         <div class="floatLeftBold">
-           <input type="text" name="edtStatus" id="edtStatus" size=55/>
-           <input type=button name="btnAddStatus" id="btnAddStatus" value="+" ng-click="showStatusPOPClick()"/>
-         </div>
-       </div>
-       -->
-
-     </div> <!-- end of infoOutBox -->
-
-      <!-- Result List  ng-repeat="im in testCaseResult" -->
-      <div class="resultBox">
-      </div>
- </ion-content>
- <br/>
- <br/>
- <br/>
 
 </body>
 </html>
